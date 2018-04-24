@@ -24,10 +24,13 @@ sys.path.append(OBJECT_DETECTION_DIR)
 sys.path.append(RESEARCH_DIR)
 sys.path.append(MODELS_DIR)
 
+# HACK
 # Handle SEG fault
-#def sig_handler(signum, frame):
-#   print("segfault")
-#signal.signal(signal.SIGSEGV, sig_handler)
+def sig_handler(signum, frame):
+   print("signal exit")
+   sys.exit(0)
+#signal.signal(signal.SIGINT, sig_handler)
+signal.signal(signal.SIGSEGV, sig_handler)
 
 import numpy as np
 import os
@@ -222,53 +225,41 @@ def run_inference_for_single_image(image, graph):
   return output_dict
 
 # HACK
-# Use same session for multiple frames. 
-# Drop detection_masks stuff.
-# My second version.
-def run_inference_for_single_image2(image, sess):
-    # Get handles to input and output tensors
-    ops = tf.get_default_graph().get_operations()
-    all_tensor_names = {output.name for op in ops for output in op.outputs}
-    tensor_dict = {}
-    for key in [
-        'num_detections', 'detection_boxes', 'detection_scores',
-        'detection_classes']:
-        tensor_name = key + ':0'
-        if tensor_name in all_tensor_names:
-           tensor_dict[key] = tf.get_default_graph().get_tensor_by_name(
-              tensor_name)
-    image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
-
-    # Run inference
-    output_dict = sess.run(tensor_dict,
-                           feed_dict={image_tensor: np.expand_dims(image, 0)})
-
-    # all outputs are float32 numpy arrays, so convert types as appropriate
-    output_dict['num_detections'] = int(output_dict['num_detections'][0])
-    output_dict['detection_classes'] = output_dict[
-          'detection_classes'][0].astype(np.uint8)
-    output_dict['detection_boxes'] = output_dict['detection_boxes'][0]
-    output_dict['detection_scores'] = output_dict['detection_scores'][0]
-    return output_dict
-
-
-# In[ ]:
-
-
-# HACK
-#for image_path in TEST_IMAGE_PATHS:
-def run_cam():
+def run_cam(cap):
   while detection_graph.as_default():
     with tf.Session(graph=detection_graph) as sess:
-        cap = cv2.VideoCapture(0)
 
-        # HACK
+        # HACK - Have this outside the loop to run faster
+        ops = tf.get_default_graph().get_operations()
+        all_tensor_names = {output.name for op in ops for output in op.outputs}
+        tensor_dict = {}
+        for key in [
+            'num_detections', 'detection_boxes', 'detection_scores',
+            'detection_classes']:
+            tensor_name = key + ':0'
+            if tensor_name in all_tensor_names:
+              tensor_dict[key] = tf.get_default_graph().get_tensor_by_name(
+                 tensor_name)
+        image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
+
+        # Webcam loop
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret: break
             image_np = frame
 
-            output_dict = run_inference_for_single_image2(image_np, sess)
+	    # Run the inference and massage the output
+            output_dict = sess.run(tensor_dict,
+                           feed_dict={image_tensor: np.expand_dims(image_np, 0)})
+
+            # all outputs are float32 numpy arrays, so convert types as appropriate
+            output_dict['num_detections'] = int(output_dict['num_detections'][0])
+            output_dict['detection_classes'] = output_dict[
+               'detection_classes'][0].astype(np.uint8)
+            output_dict['detection_boxes'] = output_dict['detection_boxes'][0]
+            output_dict['detection_scores'] = output_dict['detection_scores'][0]
+
+            #output_dict = run_inference_for_single_image2(image_np, sess)
             # Visualization of the results of a detection.
             vis_util.visualize_boxes_and_labels_on_image_array(
                image_np,
@@ -276,21 +267,21 @@ def run_cam():
                output_dict['detection_classes'],
                output_dict['detection_scores'],
                category_index,
-               instance_masks=output_dict.get('detection_masks'),
                use_normalized_coordinates=True,
                line_thickness=8)
 
             cv2.imshow("frame", image_np)
             if (cv2.waitKey(1) & 0xFF) == ord('q'): break
 
-        cap.release()
-        cv2.destroyAllWindows()
 
 # HACK
 if __name__ == "__main__":
   try:
-     run_cam()
-  except:
-     print("OK. Exiting ,,,")
+     cap = cv2.VideoCapture(0)
+     run_cam(cap)
+  except KeyboardInterrupt:
+     print("OK. Exiting all ,,,")
+  cap.release()
+  cv2.destroyAllWindows()
 
 
