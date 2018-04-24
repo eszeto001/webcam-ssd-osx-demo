@@ -38,9 +38,12 @@ but broke the object_detection_tutorial.ipynb.
 To fix this, the original file was retained from an earlier version.
 You can copy this back in to the appropriate directory.
 
+```
 $ cd <webcam-ssd-osx-demo>
+
 $ cp fix/string_int_label_map_pb2.py <tf-models-dir>/research/object_detection/protos
 
+```
 
 ### Demo
 
@@ -51,7 +54,7 @@ The basic code for a "hello world" webcam is fairly simple.
 ```python
 import cv2
 
-cap = cv2.VideoCapture(0) # Capture video from camera
+cap = cv2.VideoCapture(0)
 
 while(cap.isOpened()):
     ret, frame = cap.read()
@@ -92,12 +95,13 @@ $ python webcam-ssd.py
 
 I got something like the following:
 
+Inline-style:
 [Image of a cup](./images/cup.png)
 
 
-You shoud be able to find the list of supported classes
-in <tf-models-dir>/research/object_detection/data/mscoco_label_map.pbtxt
+You shoud be able to find the list of supported classes in 
 
-
-
+```
+<tf-models-dir>/research/object_detection/data/mscoco_label_map.pbtxt
+```
 
