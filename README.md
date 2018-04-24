@@ -73,7 +73,7 @@ as a quick test that openCV is installed correctly,
 and works with your webcam.
 
 
-Next want draw boundig boxes around the objects, and
+Next want draw bounding boxes around the objects, and
 label them. We modify the original Tensorflow object detection
 tutorial for this.
 
@@ -83,6 +83,7 @@ First we export the Ipython notebook as python.
 
 Then this was hacked up as webcam-ssd.py in this directory.
 Be sure to note the comments marked with HACK.
+It's kind of quick and dirty.
 
 The variable MODELS_DIR should be manually edited to 
 point to the location where you've installed the Tensorflow
