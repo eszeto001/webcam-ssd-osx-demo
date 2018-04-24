@@ -79,16 +79,11 @@ tutorial for this.
 
 [Object Detection Tutorial](https://github.com/tensorflow/models/blob/master/research/object_detection/object_detection_tutorial.ipynb)
 
-First we export the Ipython notebook as python.
-
-Then this was hacked up as webcam-ssd.py in this directory.
-Be sure to note the comments marked with HACK.
-It's kind of quick and dirty.
+The code was taken from the Ipython notebook tutorial and refactored.
 
 The variable MODELS_DIR should be manually edited to 
 point to the location where you've installed the Tensorflow
 models/ directory.
-
 
 To run
 
@@ -104,8 +99,3 @@ You shoud be able to find the list of supported classes in
 ```
 <tf-models-dir>/research/object_detection/data/mscoco_label_map.pbtxt
 ```
-
-## Bugs
-
-* When exiting with 'q'uit or control-c, it does a SEG fault.
-
