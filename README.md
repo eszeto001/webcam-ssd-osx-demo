@@ -74,12 +74,9 @@ and works with your webcam.
 
 
 Next want draw bounding boxes around the objects, and
-label them. We modify the original Tensorflow object detection
-tutorial for this.
+label them. We modify the original Tensorflow object detection tutorial for this.
 
 [Object Detection Tutorial](https://github.com/tensorflow/models/blob/master/research/object_detection/object_detection_tutorial.ipynb)
-
-The code was taken from the Ipython notebook tutorial and refactored.
 
 The variable MODELS_DIR should be manually edited to 
 point to the location where you've installed the Tensorflow
