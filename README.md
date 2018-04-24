@@ -95,8 +95,7 @@ $ python webcam-ssd.py
 
 I got something like the following:
 
-Inline-style:
-[Image of a cup](./images/cup.png)
+<img style="float: center;" src="./images/cup.png" />
 
 
 You shoud be able to find the list of supported classes in 
