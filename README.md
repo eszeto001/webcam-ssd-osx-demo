@@ -12,19 +12,19 @@ So the additional that need to be installed are the following:
 ---------------------
 [Tensorflow](https://www.tensorflow.org/install/install_mac)
 
-With anaconda, you should be able to do the following:
-
-$ conda install tensorflow
+```
+$ pip install --upgrade pip
+$ pip install tensorflow 
+```
 
 ---------------------
 [OpenCV](https://www.pyimagesearch.com/2016/12/19/install-opencv-3-on-macos-with-homebrew-the-easy-way/)
 
-This can be a very painful process, and maybe the hardest part
-of this tutorial.
-
 With anaconda, you should be able to do the following:
 
+```
 $ conda install opencv
+```
 
 ---------------------
 Next you should install the tensorflow models somewhere.
