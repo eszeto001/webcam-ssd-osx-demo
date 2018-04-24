@@ -1,6 +1,6 @@
 # webcam-ssd-osx-demo
 
-This demonstrate a Single Shot Detector with a Mac webcam.
+This demonstrate a Single Shot Detector with a iMac webcam.
 
 ## Installation
 
@@ -49,7 +49,7 @@ $ cp fix/string_int_label_map_pb2.py <tf-models-dir>/research/object_detection/p
 
 The basic code for a "hello world" webcam is fairly simple.
 (This is perhaps not the most robust code.  But for demonstration
- purposes, removig all the cruft, it should suffice.)
+ purposes, removing all the cruft, it should suffice.)
 
 ```python
 import cv2
@@ -99,3 +99,4 @@ You shoud be able to find the list of supported classes in
 ```
 <tf-models-dir>/research/object_detection/data/mscoco_label_map.pbtxt
 ```
+
