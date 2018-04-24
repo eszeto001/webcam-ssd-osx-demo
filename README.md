@@ -2,7 +2,7 @@
 
 This demonstrate a Single Shot Detector with a Mac webcam.
 
-### Installation
+## Installation
 
 I currently use OSX 10.3.x.
 Python 3.6.4 via Anaconda is installed.
@@ -45,7 +45,7 @@ $ cp fix/string_int_label_map_pb2.py <tf-models-dir>/research/object_detection/p
 
 ```
 
-### Demo
+## Demo
 
 The basic code for a "hello world" webcam is fairly simple.
 (This is perhaps not the most robust code.  But for demonstration
