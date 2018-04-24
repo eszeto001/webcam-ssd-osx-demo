@@ -226,7 +226,12 @@ def run_inference_for_single_image(image, graph):
 
 # HACK
 def run_cam(cap):
-  while detection_graph.as_default():
+  print("")
+  print("Click on display window to select.")
+  print("Type 'q' in cam display window to quit.")
+  print("")
+  sys.stdout.flush()
+  with detection_graph.as_default():
     with tf.Session(graph=detection_graph) as sess:
 
         # HACK - Have this outside the loop to run faster
@@ -271,15 +276,17 @@ def run_cam(cap):
                line_thickness=8)
 
             cv2.imshow("frame", image_np)
-            if (cv2.waitKey(1) & 0xFF) == ord('q'): break
+            if (cv2.waitKey(1) & 0xFF) == ord('q'): 
+               print("Quitting,")
+               break
 
 # HACK
 if __name__ == "__main__":
   try:
      cap = cv2.VideoCapture(0)
      run_cam(cap)
-  except KeyboardInterrupt:
-     print("OK. Exiting all ,,,")
+  except:
+     print("Exception. Exiting all ,,,")
   cap.release()
   cv2.destroyAllWindows()
 

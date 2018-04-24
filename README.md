@@ -107,7 +107,5 @@ You shoud be able to find the list of supported classes in
 
 ## Bugs
 
-1. cv2.waitKey(1) does not seem to work.  It doesn't recogniqe the 'q'.
-
-2. When control-C is done to abort, a SEG fault 11 results. This did not happen with the previous version of Tensorflow.
+* When control-C is done to abort, a SEG fault 11 results. This did not happen with the previous version of Tensorflow.
 
