@@ -107,5 +107,5 @@ You shoud be able to find the list of supported classes in
 
 ## Bugs
 
-* When control-C is done to abort, a SEG fault 11 results. This did not happen with the previous version of Tensorflow.
+* When exiting with 'q'uit or control-c, it does a SEG fault.
 

@@ -18,6 +18,7 @@ MODELS_DIR = "/Users/eszeto/test/tf/models"
 #
 import sys, os
 import signal
+import traceback
 RESEARCH_DIR = MODELS_DIR+"/research"
 OBJECT_DETECTION_DIR = RESEARCH_DIR+"/object_detection"
 sys.path.append(OBJECT_DETECTION_DIR)
@@ -225,7 +226,7 @@ def run_inference_for_single_image(image, graph):
   return output_dict
 
 # HACK
-def run_cam(cap):
+def run_cam():
   print("")
   print("Click on display window to select.")
   print("Type 'q' in cam display window to quit.")
@@ -248,6 +249,7 @@ def run_cam(cap):
         image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
 
         # Webcam loop
+        cap = cv2.VideoCapture(0)
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret: break
@@ -279,15 +281,14 @@ def run_cam(cap):
             if (cv2.waitKey(1) & 0xFF) == ord('q'): 
                print("Quitting,")
                break
+        cap.release()
+        cv2.destroyAllWindows()
 
 # HACK
 if __name__ == "__main__":
   try:
-     cap = cv2.VideoCapture(0)
-     run_cam(cap)
+     run_cam()
   except:
-     print("Exception. Exiting all ,,,")
-  cap.release()
-  cv2.destroyAllWindows()
+     traceback.print_exc()
 
 
