@@ -273,7 +273,6 @@ def run_cam(cap):
             cv2.imshow("frame", image_np)
             if (cv2.waitKey(1) & 0xFF) == ord('q'): break
 
-
 # HACK
 if __name__ == "__main__":
   try:
