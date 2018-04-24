@@ -223,6 +223,7 @@ def run_inference_for_single_image(image, graph):
 
 # HACK
 # Use same session for multiple frames. 
+# Drop detection_masks stuff.
 # My second version.
 def run_inference_for_single_image2(image, sess):
     # Get handles to input and output tensors
@@ -231,26 +232,11 @@ def run_inference_for_single_image2(image, sess):
     tensor_dict = {}
     for key in [
         'num_detections', 'detection_boxes', 'detection_scores',
-        'detection_classes', 'detection_masks']:
+        'detection_classes']:
         tensor_name = key + ':0'
         if tensor_name in all_tensor_names:
            tensor_dict[key] = tf.get_default_graph().get_tensor_by_name(
               tensor_name)
-    if 'detection_masks' in tensor_dict:
-      # The following processing is only for single image
-      detection_boxes = tf.squeeze(tensor_dict['detection_boxes'], [0])
-      detection_masks = tf.squeeze(tensor_dict['detection_masks'], [0])
-      # Reframe is required to translate mask from box coordinates to image coordinates and fit the image size.
-      real_num_detection = tf.cast(tensor_dict['num_detections'][0], tf.int32)
-      detection_boxes = tf.slice(detection_boxes, [0, 0], [real_num_detection, -1])
-      detection_masks = tf.slice(detection_masks, [0, 0, 0], [real_num_detection, -1, -1])
-      detection_masks_reframed = utils_ops.reframe_box_masks_to_image_masks(
-          detection_masks, detection_boxes, image.shape[0], image.shape[1])
-      detection_masks_reframed = tf.cast(
-          tf.greater(detection_masks_reframed, 0.5), tf.uint8)
-      # Follow the convention by adding back the batch dimension
-      tensor_dict['detection_masks'] = tf.expand_dims(
-          detection_masks_reframed, 0)
     image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
 
     # Run inference
@@ -263,8 +249,6 @@ def run_inference_for_single_image2(image, sess):
           'detection_classes'][0].astype(np.uint8)
     output_dict['detection_boxes'] = output_dict['detection_boxes'][0]
     output_dict['detection_scores'] = output_dict['detection_scores'][0]
-    if 'detection_masks' in output_dict:
-      output_dict['detection_masks'] = output_dict['detection_masks'][0]
     return output_dict
 
 
@@ -273,41 +257,40 @@ def run_inference_for_single_image2(image, sess):
 
 # HACK
 #for image_path in TEST_IMAGE_PATHS:
-while detection_graph.as_default():
-  with tf.Session(graph=detection_graph) as sess:
-     cap = cv2.VideoCapture(0)
+def run_cam():
+  while detection_graph.as_default():
+    with tf.Session(graph=detection_graph) as sess:
+        cap = cv2.VideoCapture(0)
 
-     # HACK
-     while cap.isOpened():
-         ret, frame = cap.read()
-         if not ret: break
-         image_np = frame
+        # HACK
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret: break
+            image_np = frame
 
-         #image = Image.open(image_path)
-         # the array based representation of the image will be used later in order to prepare the
-         # result image with boxes and labels on it.
-         # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-         image_np_expanded = np.expand_dims(image_np, axis=0)
-         # Actual detection.
-         #output_dict = run_inference_for_single_image(image_np, detection_graph)
-         output_dict = run_inference_for_single_image2(image_np, sess)
-         # Visualization of the results of a detection.
-         vis_util.visualize_boxes_and_labels_on_image_array(
-            image_np,
-            output_dict['detection_boxes'],
-            output_dict['detection_classes'],
-            output_dict['detection_scores'],
-            category_index,
-            instance_masks=output_dict.get('detection_masks'),
-            use_normalized_coordinates=True,
-            line_thickness=8)
+            output_dict = run_inference_for_single_image2(image_np, sess)
+            # Visualization of the results of a detection.
+            vis_util.visualize_boxes_and_labels_on_image_array(
+               image_np,
+               output_dict['detection_boxes'],
+               output_dict['detection_classes'],
+               output_dict['detection_scores'],
+               category_index,
+               instance_masks=output_dict.get('detection_masks'),
+               use_normalized_coordinates=True,
+               line_thickness=8)
 
-	 # HACK
-         #plt.figure(figsize=IMAGE_SIZE)
-         #plt.imshow(image_np)
-         cv2.imshow("frame", image_np)
-         if (cv2.waitKey(1) & 0xFF) == ord('q'): break
+            cv2.imshow("frame", image_np)
+            if (cv2.waitKey(1) & 0xFF) == ord('q'): break
 
-     cap.release()
-     cv2.destroyAllWindows()
+        cap.release()
+        cv2.destroyAllWindows()
+
+# HACK
+if __name__ == "__main__":
+  try:
+     run_cam()
+  except:
+     print("OK. Exiting ,,,")
+
 
