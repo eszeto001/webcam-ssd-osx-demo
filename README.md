@@ -31,8 +31,8 @@ Next you should install the tensorflow models somewhere.
 
 $ git clone https://github.com/tensorflow/models
 
-There seems to be a bug in the research/object_detection stuff.
-It appears someone was cleaning up some stuff (removing files),
+There seems to be a bug in the research/object_detection code.
+It appears someone was cleaning out some files,
 but broke the object_detection_tutorial.ipynb.
 
 To fix this, the original file was retained from an earlier version.
