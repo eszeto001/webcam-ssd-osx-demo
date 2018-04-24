@@ -17,12 +17,17 @@
 MODELS_DIR = "/Users/eszeto/test/tf/models"
 #
 import sys, os
+import signal
 RESEARCH_DIR = MODELS_DIR+"/research"
 OBJECT_DETECTION_DIR = RESEARCH_DIR+"/object_detection"
 sys.path.append(OBJECT_DETECTION_DIR)
 sys.path.append(RESEARCH_DIR)
 sys.path.append(MODELS_DIR)
 
+# Handle SEG fault
+#def sig_handler(signum, frame):
+#   print("segfault")
+#signal.signal(signal.SIGSEGV, sig_handler)
 
 import numpy as np
 import os
@@ -272,15 +277,15 @@ while detection_graph.as_default():
   with tf.Session(graph=detection_graph) as sess:
      cap = cv2.VideoCapture(0)
 
+     # HACK
      while cap.isOpened():
          ret, frame = cap.read()
          if not ret: break
-         image = frame
+         image_np = frame
 
          #image = Image.open(image_path)
          # the array based representation of the image will be used later in order to prepare the
          # result image with boxes and labels on it.
-         image_np = frame
          # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
          image_np_expanded = np.expand_dims(image_np, axis=0)
          # Actual detection.
@@ -297,6 +302,7 @@ while detection_graph.as_default():
             use_normalized_coordinates=True,
             line_thickness=8)
 
+	 # HACK
          #plt.figure(figsize=IMAGE_SIZE)
          #plt.imshow(image_np)
          cv2.imshow("frame", image_np)
